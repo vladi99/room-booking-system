@@ -4,7 +4,9 @@ export default (sequelize, DataTypes, Model) => {
     }
   }
   User.init({
-    email: DataTypes.STRING
+    email: DataTypes.STRING,
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'user',

@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import db from './models';
 import waitForDbConnection from './utils/wait-for-db-connection'
-import counterRoute from './routes/counter'
+import userRoute from './routes/user'
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   res.json({message: 'Hello world.'});
 });
 
-counterRoute(app);
+userRoute(app);
 
 const PORT = process.env.PORT;
 
