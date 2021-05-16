@@ -13,9 +13,9 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
       - name: Build client image
-        run: docker build ./client --file client/Dockerfile.prod --tag registry.heroku.com/${{ secrets.CLIENT_APP_NAME }}/web
+        run: docker build ./client --file client/Dockerfile.prod --build-arg REACT_APP_API_URL=${{ secrets.API_URL }} --build-arg DISABLE_ESLINT_PLUGIN=true --tag registry.heroku.com/${{ secrets.CLIENT_APP_NAME }}/web
       - name: Build api image
-        run: docker build ./api --file api/Dockerfile.prod --build-arg REACT_APP_API_URL=${{ secrets.API_URL }} --build-arg DISABLE_ESLINT_PLUGIN=true --tag registry.heroku.com/${{ secrets.API_APP_NAME }}/web
+        run: docker build ./api --file api/Dockerfile.prod --tag registry.heroku.com/${{ secrets.API_APP_NAME }}/web
       - name: Push client image
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
