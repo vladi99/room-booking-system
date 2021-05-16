@@ -70,7 +70,8 @@ docker run --name=room-booking-system-client --rm --network=room-booking-system 
 ```
 ## Live URLs
 
-This section is empty
+* API - https://room-booking-system-api.herokuapp.com
+* CLIENT - https://book-room-system.herokuapp.com
 
 ## Running tests
 
