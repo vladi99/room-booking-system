@@ -1,0 +1,7 @@
+FROM node:14.6.0-alpine
+RUN mkdir -p /srv/app/api
+WORKDIR /srv/app/api
+COPY package*.json /srv/app/api/
+RUN npm install --only=production
+COPY . /srv/app/api
+CMD ["npm", "start"]

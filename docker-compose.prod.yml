@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+
+  ############################
+  #  Setup client container  #
+  ############################
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+      args:
+        - REACT_APP_API_URL=${API_URL}
+        - DISABLE_ESLINT_PLUGIN=${DISABLE_ESLINT_PLUGIN}
+    ports:
+      - "1337:80"
+    depends_on:
+      - api
+
+  #########################
+  #  Setup api container  #
+  #########################
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.prod
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST_IP=mysql
+      - PORT=${API_PORT}
+    expose:
+      - ${API_PORT}
+    ports:
+      - ${API_PORT}:${API_PORT}
+    restart: always
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  ########################
+  #  Setup db container  #
+  ########################
+  mysql:
+    image: mysql:8.0.20
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    cap_add:
+      - SYS_NICE
+    ports:
+      - 3306:3306
+    restart: unless-stopped
