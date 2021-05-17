@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Button,
   FormControl,
@@ -7,42 +7,32 @@ import {
   Heading,
   Container,
   Flex,
-  useToast
+  useToast, FormErrorMessage
 } from '../../components';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectStatus, createUserAsync } from './userSlice';
+import { useDispatch } from 'react-redux';
+import { createUserAsync } from './userSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useForm } from 'react-hook-form';
+import { ALPHA_NUMERIC, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../../constants';
 
 export function UserForm() {
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const loading = useSelector(selectStatus) === 'loading';
   const toast = useToast()
   const dispatch = useDispatch();
 
-  const onEmailChanged = (e) => setEmail(e.target.value);
-  const onFirstNameChanged = (e) => setFirstName(e.target.value);
-  const onLastNameChanged = (e) => setLastName(e.target.value);
+  const { handleSubmit, register, formState: { errors, isSubmitting }, reset } = useForm();
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
-      const resultAction = await dispatch(createUserAsync({ email, firstName, lastName }));
+      const resultAction = await dispatch(createUserAsync(data));
       unwrapResult(resultAction);
-      setEmail('');
-      setFirstName('');
-      setLastName('');
+      reset();
       toast({
-        title: 'Account created.',
-        description: 'We\'ve created your account for you.',
+        title: 'User created.',
         status: 'success',
       })
     } catch (err) {
       toast({
         title: 'Failed to create account.',
-        description: err.message,
         status: 'error',
       })
     }
@@ -50,41 +40,71 @@ export function UserForm() {
 
   return (
     <Container>
-      <Heading as="h1" mt={6} color="gray.600" textAlign="center">
+      <Heading as="h1" my={6} textAlign="center">
         Create user
       </Heading>
-      <form noValidate onSubmit={onSubmit}>
-        <FormControl mt={3} isRequired>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        <FormControl mb={3} isRequired isInvalid={errors?.email}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
-            size="md"
-            value={email}
-            onChange={onEmailChanged}
+            {...register('email', { required: true })}
           />
+          <FormErrorMessage>
+            {errors?.email?.type === "required" && <p>This field is required</p>}
+          </FormErrorMessage>
         </FormControl>
-        <FormControl mt={3} isRequired>
-          <FormLabel>First name</FormLabel>
+        <FormControl mb={3} isRequired isInvalid={errors?.firstName}>
+          <FormLabel htmlFor="firstName">First name</FormLabel>
           <Input
+            name="firstName"
             type="text"
-            size="md"
-            value={firstName}
-            onChange={onFirstNameChanged}
+            {...register('firstName', {
+              required: true,
+              maxLength: NAME_MAX_LENGTH,
+              minLength: NAME_MIN_LENGTH,
+              pattern: ALPHA_NUMERIC
+            })}
           />
+          <FormErrorMessage>
+            {errors?.firstName?.type === "required" && <p>This field is required</p>}
+            {errors?.firstName?.type === "maxLength" && (
+              <p>First name cannot exceed {NAME_MAX_LENGTH} characters</p>
+            )}
+            {errors?.firstName?.type === "minLength" && (
+              <p>First name cannot be less {NAME_MIN_LENGTH} characters</p>
+            )}
+            {errors?.firstName?.type === "pattern" && (
+              <p>Alphabetical characters only</p>
+            )}
+          </FormErrorMessage>
         </FormControl>
-        <FormControl mt={3} isRequired>
-          <FormLabel>Last name</FormLabel>
+        <FormControl mb={3} isRequired isInvalid={errors?.lastName}>
+          <FormLabel htmlFor="lastName">Last name</FormLabel>
           <Input
+            name="lastName"
             type="text"
-            size="md"
-            value={lastName}
-            onChange={onLastNameChanged}
+            {...register('lastName', {
+              required: true,
+              maxLength: NAME_MAX_LENGTH,
+              minLength: NAME_MIN_LENGTH,
+              pattern: ALPHA_NUMERIC
+            })}
           />
+          {errors?.lastName?.type === "required" && <FormErrorMessage>This field is required</FormErrorMessage>}
+          {errors?.lastName?.type === "maxLength" && (
+            <FormErrorMessage>Last name cannot exceed {NAME_MAX_LENGTH} characters</FormErrorMessage>
+          )}
+          {errors?.lastName?.type === "minLength" && (
+            <FormErrorMessage>Last name cannot be less {NAME_MIN_LENGTH} characters</FormErrorMessage>
+          )}
+          {errors?.lastName?.type === "pattern" && (
+            <FormErrorMessage>Alphabetical characters only</FormErrorMessage>
+          )}
         </FormControl>
         <Flex>
           <Button
-            isLoading={loading}
-            ml="auto"
+            isLoading={isSubmitting}
             mt={4}
             type="submit"
             colorScheme="teal"

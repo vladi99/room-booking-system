@@ -1,3 +1,5 @@
+import { NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../utils/constants';
+
 export default (sequelize, DataTypes, Model) => {
   class User extends Model {
     static associate(models) {
@@ -7,21 +9,36 @@ export default (sequelize, DataTypes, Model) => {
     email: {
       type: DataTypes.STRING,
       validate: {
-        isEmail: true,
+        isEmail: {
+          args: true,
+          msg: 'Email must be valid.'
+        },
       },
     },
     firstName: {
       type: DataTypes.STRING,
       validate: {
-        isAlpha: true,
-        len: [2, 256],
+        isAlpha: {
+          args: true,
+          msg: 'First name must contain only letters.'
+        },
+        len: {
+          args: [NAME_MIN_LENGTH, NAME_MAX_LENGTH],
+          msg: `First name must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters long.`
+        },
       },
     },
     lastName: {
       type: DataTypes.STRING,
       validate: {
-        isAlpha: true,
-        len: [2, 256],
+        isAlpha: {
+          args: true,
+          msg: 'Last name must contain only letters.'
+        },
+        len: {
+          args: [NAME_MIN_LENGTH, NAME_MAX_LENGTH],
+          msg: `Last name must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters long.`
+        },
       },
     },
   }, {

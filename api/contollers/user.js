@@ -11,9 +11,7 @@ export function findAll(req, res) {
       }
     }
   }).then(data => res.send(data))
-    .catch(err => res.status(400).send({
-      message: err.message
-    }))
+    .catch(err => res.status(400).send(err.errors))
 }
 
 export function create(req, res) {
@@ -21,7 +19,5 @@ export function create(req, res) {
 
   return user.create({ firstName, lastName, email })
     .then(data => res.send(data))
-    .catch(err => res.status(400).send({
-      message: err.message
-    }))
+    .catch(err => res.status(400).send(err.errors))
 }

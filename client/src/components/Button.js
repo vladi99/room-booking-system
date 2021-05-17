@@ -4,7 +4,7 @@ import {
 } from '@chakra-ui/react'
 
 export function Button(props) {
-  return <ChakraButton {...props}>{props.children}</ChakraButton>
+  return <ChakraButton {...props} />
 }
 
 export function IconButton(props) {

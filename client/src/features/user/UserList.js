@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { selectUsers, selectStatus, fetchUsersAsync } from './userSlice';
 import {
   Table,
-  TableCaption,
   Thead,
   Tr,
   Tbody,
@@ -28,26 +27,25 @@ export function UserList() {
   }, [dispatch, status]);
 
   return (
-    <Container>
+    <Container maxW="3xl">
+      <Grid my={6} templateColumns="1fr auto 1fr" alignItems="center">
+        <GridItem colStart={2} >
+          <Heading ml="auto" as="h1">
+            Users
+          </Heading>
+        </GridItem>
+        <GridItem ml="auto">
+          <Link to="/users/create">
+            <IconButton
+              colorScheme="teal"
+              aria-label="Add"
+              icon={<AddIcon />}
+            />
+          </Link>
+        </GridItem>
+      </Grid>
+
       <Table colorScheme="teal" variant="striped">
-        <TableCaption placement="top">
-          <Grid templateColumns="1fr auto 1fr" alignItems="center">
-            <GridItem colStart={2} >
-              <Heading ml="auto" as="h1">
-                Users
-              </Heading>
-            </GridItem>
-            <GridItem ml="auto">
-              <Link to="/users/create">
-                <IconButton
-                  colorScheme="teal"
-                  aria-label="Add"
-                  icon={<AddIcon />}
-                />
-              </Link>
-            </GridItem>
-          </Grid>
-        </TableCaption>
         <Thead>
           <Tr>
             <Th>#</Th>
@@ -61,9 +59,9 @@ export function UserList() {
           {users.map((user) => (
             <Tr key={user.id}>
               <Td>{user.id}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.firstName}</Td>
-              <Td>{user.lastName}</Td>
+              <Td maxW={200}>{user.email}</Td>
+              <Td maxW={200}>{user.firstName}</Td>
+              <Td maxW={200}>{user.lastName}</Td>
               <Td>
                 <Stack spacing={3} direction="row" align="center">
                   <IconButton

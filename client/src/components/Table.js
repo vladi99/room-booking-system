@@ -5,34 +5,28 @@ import {
   Tr as ChakraTr,
   Th as ChakraTh,
   Td as ChakraTd,
-  TableCaption  as ChakraTableCaption,
 } from '@chakra-ui/react'
 
 export function Table(props) {
-  return <ChakraTable {...props}>{props.children}</ChakraTable>
+  return <ChakraTable {...props}/>
 }
 
 export function Tbody(props) {
-  return <ChakraTbody>{props.children}</ChakraTbody>
+  return <ChakraTbody {...props}/>
 }
 
 export function Thead(props) {
-  return <ChakraThead>{props.children}</ChakraThead>
+  return <ChakraThead {...props}/>
 }
 
 export function Tr(props) {
-  return <ChakraTr>{props.children}</ChakraTr>
+  return <ChakraTr {...props}/>
 }
 
 export function Th(props) {
-  return <ChakraTh>{props.children}</ChakraTh>
+  return <ChakraTh {...props}/>
 }
 
 export function Td(props) {
-  return <ChakraTd>{props.children}</ChakraTd>
+  return <ChakraTd {...props}/>
 }
-
-export function TableCaption(props) {
-  return <ChakraTableCaption {...props}>{props.children}</ChakraTableCaption>
-}
-

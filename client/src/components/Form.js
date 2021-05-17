@@ -1,17 +1,23 @@
 import {
   FormControl as ChakraFormControl,
   FormLabel as ChakraFormLabel,
-  Input as ChakraFormInput
+  Input as ChakraFormInput,
+  FormErrorMessage as ChakraFormErrorMessage
 } from '@chakra-ui/react'
+import { forwardRef } from 'react';
 
 export function FormControl(props) {
-  return <ChakraFormControl {...props}>{props.children}</ChakraFormControl>
+  return <ChakraFormControl {...props}/>
 }
 
 export function FormLabel(props) {
-  return <ChakraFormLabel {...props}>{props.children}</ChakraFormLabel>
+  return <ChakraFormLabel {...props}/>
 }
 
-export function Input(props) {
-  return <ChakraFormInput {...props}>{props.children}</ChakraFormInput>
+export function FormErrorMessage(props) {
+  return <ChakraFormErrorMessage {...props}/>
 }
+
+export const Input = forwardRef((props, ref) => (
+  <ChakraFormInput ref={ref} {...props}/>
+));

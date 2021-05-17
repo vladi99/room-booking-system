@@ -7,10 +7,11 @@ import {
 import { UserList } from './features/user/UserList';
 import { UserForm } from './features/user/UserForm';
 import { ChakraProvider } from '@chakra-ui/react'
+import { theme } from './theme'
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <BrowserRouter>
         <Routes>
           <Route path="users" element={<UserList/>} />

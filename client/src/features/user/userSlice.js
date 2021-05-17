@@ -33,16 +33,8 @@ export const userSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
-      .addCase(createUserAsync.pending, (state, action) => {
-        state.status = 'loading';
-      })
       .addCase(createUserAsync.fulfilled, (state, action) => {
-        state.status = 'succeeded'
         state.items.push(action.payload);
-      })
-      .addCase(createUserAsync.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
       })
   },
 });

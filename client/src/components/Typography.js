@@ -3,5 +3,5 @@ import {
 } from '@chakra-ui/react'
 
 export function Heading(props) {
-  return <ChakraHeading {...props}>{props.children}</ChakraHeading>
+  return <ChakraHeading {...props}/>
 }
