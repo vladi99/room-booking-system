@@ -12,9 +12,13 @@ export const fetchUsersAsync = createAsyncThunk('user/fetchUsers', async () => {
   return res.data;
 });
 
-export const createUserAsync = createAsyncThunk('user/createUser', async (user) => {
-  const res = await createUser(user);
-  return res.data;
+export const createUserAsync = createAsyncThunk('user/createUser', async (user, { rejectWithValue }) => {
+  try {
+    const res = await createUser(user);
+    return res.data
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
 });
 
 export const userSlice = createSlice({

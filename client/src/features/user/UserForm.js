@@ -7,7 +7,8 @@ import {
   Heading,
   Container,
   Flex,
-  useToast, FormErrorMessage
+  useToast,
+  FormErrorMessage
 } from '../../components';
 import { useDispatch } from 'react-redux';
 import { createUserAsync } from './userSlice';
@@ -19,7 +20,7 @@ export function UserForm() {
   const toast = useToast()
   const dispatch = useDispatch();
 
-  const { handleSubmit, register, formState: { errors, isSubmitting }, reset } = useForm();
+  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset } = useForm();
 
   const onSubmit = async (data) => {
     try {
@@ -30,7 +31,14 @@ export function UserForm() {
         title: 'User created.',
         status: 'success',
       })
-    } catch (err) {
+    } catch (errors) {
+      errors.forEach((error) => {
+        setError(error.path, {
+          type: 'server',
+          message: error.message
+        })
+      });
+
       toast({
         title: 'Failed to create account.',
         status: 'error',
@@ -50,9 +58,8 @@ export function UserForm() {
             type="email"
             {...register('email', { required: true })}
           />
-          <FormErrorMessage>
-            {errors?.email?.type === "required" && <p>This field is required</p>}
-          </FormErrorMessage>
+          {errors?.email?.type === 'required' && <FormErrorMessage>This field is required</FormErrorMessage>}
+          {errors?.email?.type === 'server' && <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>}
         </FormControl>
         <FormControl mb={3} isRequired isInvalid={errors?.firstName}>
           <FormLabel htmlFor="firstName">First name</FormLabel>
@@ -66,18 +73,11 @@ export function UserForm() {
               pattern: ALPHA_NUMERIC
             })}
           />
-          <FormErrorMessage>
-            {errors?.firstName?.type === "required" && <p>This field is required</p>}
-            {errors?.firstName?.type === "maxLength" && (
-              <p>First name cannot exceed {NAME_MAX_LENGTH} characters</p>
-            )}
-            {errors?.firstName?.type === "minLength" && (
-              <p>First name cannot be less {NAME_MIN_LENGTH} characters</p>
-            )}
-            {errors?.firstName?.type === "pattern" && (
-              <p>Alphabetical characters only</p>
-            )}
-          </FormErrorMessage>
+          {errors?.firstName?.type === 'required' && <FormErrorMessage>This field is required</FormErrorMessage>}
+          {errors?.firstName?.type === 'maxLength' && <FormErrorMessage>First name cannot exceed {NAME_MAX_LENGTH} characters</FormErrorMessage>}
+          {errors?.firstName?.type === 'minLength' && <FormErrorMessage>First name cannot be less {NAME_MIN_LENGTH} characters</FormErrorMessage>}
+          {errors?.firstName?.type === 'pattern' && <FormErrorMessage>Alphabetical characters only</FormErrorMessage>}
+          {errors?.firstName?.type === 'server' && <FormErrorMessage>{errors?.firstName?.message}</FormErrorMessage>}
         </FormControl>
         <FormControl mb={3} isRequired isInvalid={errors?.lastName}>
           <FormLabel htmlFor="lastName">Last name</FormLabel>
@@ -91,16 +91,11 @@ export function UserForm() {
               pattern: ALPHA_NUMERIC
             })}
           />
-          {errors?.lastName?.type === "required" && <FormErrorMessage>This field is required</FormErrorMessage>}
-          {errors?.lastName?.type === "maxLength" && (
-            <FormErrorMessage>Last name cannot exceed {NAME_MAX_LENGTH} characters</FormErrorMessage>
-          )}
-          {errors?.lastName?.type === "minLength" && (
-            <FormErrorMessage>Last name cannot be less {NAME_MIN_LENGTH} characters</FormErrorMessage>
-          )}
-          {errors?.lastName?.type === "pattern" && (
-            <FormErrorMessage>Alphabetical characters only</FormErrorMessage>
-          )}
+          {errors?.lastName?.type === 'required' && <FormErrorMessage>This field is required</FormErrorMessage>}
+          {errors?.lastName?.type === 'maxLength' && <FormErrorMessage>Last name cannot exceed {NAME_MAX_LENGTH} characters</FormErrorMessage>}
+          {errors?.lastName?.type === 'minLength' && <FormErrorMessage>Last name cannot be less {NAME_MIN_LENGTH} characters</FormErrorMessage>}
+          {errors?.lastName?.type === 'pattern' && <FormErrorMessage>Alphabetical characters only</FormErrorMessage>}
+          {errors?.lastName?.type === 'server' && <FormErrorMessage>{errors?.lastName?.message}</FormErrorMessage>}
         </FormControl>
         <Flex>
           <Button
