@@ -1,5 +1,5 @@
 import express from 'express';
-import { create, del, findAll, update, findOne } from '../contollers/user';
+import { create, findAll, del, findOne, update } from '../contollers/company';
 
 export default function (app) {
   const router = express.Router();
@@ -9,5 +9,5 @@ export default function (app) {
   router.put('/:id', update);
   router.delete('/:id', del);
 
-  app.use('/api/users', router);
+  app.use('/api/companies', router);
 }

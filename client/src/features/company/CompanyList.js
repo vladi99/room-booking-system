@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
-  selectUsers,
-  fetchUsersAsync,
-  selectUserStatus,
-  deleteUserAsync,
-  selectSelectedUser,
-  selectItem,
-} from './userSlice';
+  fetchCompaniesAsync,
+  selectCompanies,
+  selectCompanyStatus,
+  selectSelectedCompany,
+  selectItem
+} from './companySlice';
 import {
   Table,
   Thead,
@@ -19,42 +18,41 @@ import {
   Container,
   IconButton,
   EditIcon, DeleteIcon, Stack,
-  TableHeading, ConfirmationModal, useToast,
+  TableHeading, ConfirmationModal, useToast, useDisclosure,
 } from '../../components';
-import { useDisclosure } from '@chakra-ui/react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { IDLE } from '../../constants';
 
-export function UserList() {
+export function CompanyList() {
   const toast = useToast()
   const dispatch = useDispatch();
-  const users = useSelector(selectUsers);
-  const status = useSelector(selectUserStatus);
-  const selectedUser = useSelector(selectSelectedUser);
+  const companies = useSelector(selectCompanies);
+  const status = useSelector(selectCompanyStatus);
+  const selectedCompany = useSelector(selectSelectedCompany);
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     if (status === IDLE) {
-      dispatch(fetchUsersAsync());
+      dispatch(fetchCompaniesAsync());
     }
   }, [dispatch, status]);
 
-  const onDeleteSelected = (user) => {
-    dispatch(selectItem(user));
+  const onDeleteSelected = (company) => {
+    dispatch(selectItem(company));
     onOpen();
   }
 
   const onDelete = async () => {
     try {
-      const resultAction = await dispatch(deleteUserAsync(selectedUser.id));
+      const resultAction = await dispatch(deleteCompanyAsync(selectedCompany.id));
       unwrapResult(resultAction);
       toast({
-        title: 'User deleted.',
+        title: 'Company deleted.',
         status: 'success',
       })
     } catch (e) {
       toast({
-        title: 'Failed to delete user.',
+        title: 'Failed to delete company.',
         status: 'error',
       })
     } finally {
@@ -65,28 +63,24 @@ export function UserList() {
   return (
     <>
       <Container maxW="3xl">
-        <TableHeading title="Users" addLink="/users/create"/>
+        <TableHeading title="Companies" addLink="/companies/create"/>
 
         <Table colorScheme="teal" variant="striped">
           <Thead>
             <Tr>
               <Th>#</Th>
-              <Th>Email</Th>
-              <Th>First Name</Th>
-              <Th>Last Name</Th>
+              <Th>Name</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {users.map((user) => (
-              <Tr key={user.id}>
-                <Td>{user.id}</Td>
-                <Td maxW={200}>{user.email}</Td>
-                <Td maxW={200}>{user.firstName}</Td>
-                <Td maxW={200}>{user.lastName}</Td>
+            {companies.map((company) => (
+              <Tr key={company.id}>
+                <Td>{company.id}</Td>
+                <Td>{company.name}</Td>
                 <Td>
                   <Stack spacing={3} direction="row" align="center">
-                    <Link to={`/users/${user.id}`}>
+                    <Link to={`/companies/${company.id}`}>
                       <IconButton
                         colorScheme="yellow"
                         aria-label="Edit"
@@ -94,7 +88,7 @@ export function UserList() {
                       />
                     </Link>
                     <IconButton
-                      onClick={() => onDeleteSelected(user)}
+                      onClick={() => onDeleteSelected(company)}
                       colorScheme="red"
                       aria-label="Delete"
                       icon={<DeleteIcon />}
@@ -110,7 +104,7 @@ export function UserList() {
         onClose={onClose}
         isOpen={isOpen}
         onConfirm={onDelete}
-        confirmationText={`You are deleting user with ${selectedUser.email}.`}
+        confirmationText={`You are deleting company with ${selectedCompany.name}.`}
       />
     </>
   );

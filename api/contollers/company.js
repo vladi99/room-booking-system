@@ -1,13 +1,13 @@
 import models from '../models'
 import Sequelize from 'sequelize';
 
-const { user } = models
+const { company } = models
 
 export function findAll(req, res) {
-  return user.findAll({
+  return company.findAll({
     where: {
-      email: {
-        [Sequelize.Op.substring]: req.query.email || ''
+      name: {
+        [Sequelize.Op.substring]: req.query.name || ''
       }
     }
   }).then(data => res.send(data))
@@ -17,15 +17,15 @@ export function findAll(req, res) {
 export function findOne(req, res) {
   const { id } = req.params;
 
-  return user.findByPk(id)
+  return company.findByPk(id)
     .then(data => res.send(data))
     .catch(err => res.status(400).send(err.errors))
 }
 
 export function create(req, res) {
-  const { firstName, lastName, email, companyId } = req.body;
+  const { name } = req.body;
 
-  return user.create({ firstName, lastName, email, companyId })
+  return company.create({ name })
     .then(data => res.send(data))
     .catch(err => res.status(400).send(err.errors))
 }
@@ -33,7 +33,7 @@ export function create(req, res) {
 export function update(req, res) {
   const { id } = req.params;
 
-  return user.update(req.body, {
+  return company.update(req.body, {
     where: { id }
   }).then(() => res.send(req.body))
     .catch(err => res.status(400).send(err.errors))
@@ -42,7 +42,7 @@ export function update(req, res) {
 export function del(req, res) {
   const { id } = req.params;
 
-  return user.destroy({
+  return company.destroy({
     where: { id }
   }).then(() => res.sendStatus(200))
     .catch(err => res.status(400).send(err.errors))

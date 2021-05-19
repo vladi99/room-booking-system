@@ -2,7 +2,8 @@ import {
   FormControl as ChakraFormControl,
   FormLabel as ChakraFormLabel,
   Input as ChakraFormInput,
-  FormErrorMessage as ChakraFormErrorMessage
+  FormErrorMessage as ChakraFormErrorMessage,
+  Select as ChakraSelect
 } from '@chakra-ui/react'
 import { forwardRef } from 'react';
 
@@ -20,4 +21,8 @@ export function FormErrorMessage(props) {
 
 export const Input = forwardRef((props, ref) => (
   <ChakraFormInput ref={ref} {...props}/>
+));
+
+export const Select = forwardRef((props, ref) => (
+  <ChakraSelect ref={ref} {...props}/>
 ));
