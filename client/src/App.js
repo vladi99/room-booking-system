@@ -12,11 +12,24 @@ import { CreateCompany } from './features/company/CreateCompany';
 import { UpdateCompany } from './features/company/UpdateCompany';
 import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from './theme'
+import { Navbar } from './components';
+
+const links = [
+  {
+    label: 'Users',
+    url: '/users'
+  },
+  {
+    label: 'Companies',
+    url: '/companies'
+  }
+]
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
+        <Navbar links={links}/>
         <Routes>
           <Route path="users" element={<UserList/>} />
           <Route path="users/create" element={<CreateUser/>} />

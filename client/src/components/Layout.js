@@ -3,6 +3,7 @@ import {
   Container as ChakraContainer,
   Flex as ChakraFlex,
   Stack as ChakraStack,
+  HStack as ChakraHStack,
   Grid as ChakraGrid,
   GridItem as ChakraGridItem
 } from '@chakra-ui/react';
@@ -29,4 +30,8 @@ export function Grid(props) {
 
 export function GridItem(props) {
   return <ChakraGridItem {...props}/>
+}
+
+export function HStack(props) {
+  return <ChakraHStack {...props}/>
 }
