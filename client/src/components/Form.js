@@ -5,6 +5,7 @@ import {
   FormErrorMessage as ChakraFormErrorMessage,
   Select as ChakraSelect
 } from '@chakra-ui/react'
+import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 import { forwardRef } from 'react';
 
 export function FormControl(props) {
@@ -25,4 +26,8 @@ export const Input = forwardRef((props, ref) => (
 
 export const Select = forwardRef((props, ref) => (
   <ChakraSelect ref={ref} {...props}/>
+));
+
+export const Autocomplete = forwardRef((props, ref) => (
+  <CUIAutoComplete ref={ref} {...props}/>
 ));

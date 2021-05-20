@@ -1,17 +1,17 @@
 import { NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../utils/constants';
 
 export default (sequelize, DataTypes, Model) => {
-  class Company extends Model {
+  class Room extends Model {
     static associate(models) {
-      this.belongsToMany(models.room, {
+      this.belongsToMany(models.company, {
         through: 'companyRooms',
-        as: 'rooms',
-        foreignKey: 'companyId',
-        otherKey: 'roomId'
+        as: 'companies',
+        foreignKey: 'roomId',
+        otherKey: 'companyId'
       })
     }
   }
-  Company.init({
+  Room.init({
     name: {
       allowNull: false,
       unique: {
@@ -23,13 +23,13 @@ export default (sequelize, DataTypes, Model) => {
       validate: {
         len: {
           args: [NAME_MIN_LENGTH, NAME_MAX_LENGTH],
-          msg: `Company name must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters long.`
+          msg: `Room name must be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} characters long.`
         },
       },
     }
   }, {
     sequelize,
-    modelName: 'company',
+    modelName: 'room',
   });
-  return Company;
+  return Room;
 };

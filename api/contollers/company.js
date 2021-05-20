@@ -1,7 +1,7 @@
 import models from '../models'
 import Sequelize from 'sequelize';
 
-const { company } = models
+const { company, sequelize } = models
 
 export function findAll(req, res) {
   return company.findAll({
@@ -39,12 +39,21 @@ export function update(req, res) {
     .catch(err => res.status(400).send(err.errors))
 }
 
-export function del(req, res) {
+export async function del(req, res) {
   const { id } = req.params;
 
-  return company.destroy({
-    where: { id }
-  }).then(() => res.sendStatus(200))
-    .catch(err => res.status(400).send(err.errors))
+  const foundCompany = await company.findByPk(id);
+  const rooms = await foundCompany.getRooms();
+  const transaction = await sequelize.transaction();
+
+  try {
+    await foundCompany.removeRooms(rooms, { transaction });
+    await company.destroy({ where: { id }, transaction });
+    await transaction.commit();
+    return res.sendStatus(200);
+  } catch (e) {
+    await transaction.rollback();
+    res.status(400).send(e);
+  }
 }
 

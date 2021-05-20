@@ -5,6 +5,7 @@ import { FAIL, IDLE, LOADING, SUCCESS } from '../../constants';
 const initialState = {
   items: [],
   selected: { },
+  selectedItems: [],
   status: IDLE,
 };
 
@@ -47,6 +48,9 @@ export const companySlice = createSlice({
   reducers: {
     selectItem(state, action) {
       state.selected = action.payload;
+    },
+    selectItems(state, action) {
+      state.selectedItems = action.payload || [];
     }
   },
   extraReducers: (builder) => {
@@ -108,9 +112,13 @@ export const companySlice = createSlice({
 });
 
 export const selectCompanies = (state) => state.company.items;
+export const selectCompaniesLabels = (state) => state.company.items?.map(({id, name}) => ({value: id, label: name}));
 export const selectCompanyStatus = (state) => state.company.status;
 export const selectSelectedCompany = (state) => state.company.selected;
+export const selectSelectedCompanies = (state) => state.company.selectedItems;
+export const selectSelectedCompaniesData = (state) => state.company.selectedItems?.map(({value, label}) => ({id: value, name: label}));
 
 export const { selectItem } = companySlice.actions
+export const { selectItems } = companySlice.actions
 
 export default companySlice.reducer;

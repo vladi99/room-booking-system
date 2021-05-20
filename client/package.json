@@ -12,6 +12,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.21.1",
+    "chakra-ui-autocomplete": "^1.3.0",
     "framer-motion": "^4.1.16",
     "history": "^5.0.0",
     "react": "^17.0.2",
