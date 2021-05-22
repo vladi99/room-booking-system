@@ -56,53 +56,25 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUsersAsync.fulfilled, (state, action) => {
         state.status = SUCCESS
-        state.items.push(...action.payload);
+        state.items = action.payload;
       })
       .addCase(fetchUsersAsync.rejected, (state, action) => {
         state.status = FAIL;
       })
-      .addCase(fetchUserAsync.pending, (state) => {
-        state.status = LOADING;
-      })
       .addCase(fetchUserAsync.fulfilled, (state, action) => {
-        state.status = SUCCESS
         state.selected = action.payload;
-      })
-      .addCase(fetchUserAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(updateUserAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         const index = state.items.findIndex((item) => item.id === state.selected.id);
         state.items[index] = action.payload;
         state.selected = action.payload;
-        state.status = SUCCESS;
-      })
-      .addCase(updateUserAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(createUserAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(createUserAsync.fulfilled, (state, action) => {
         state.items.push(action.payload);
-        state.status = SUCCESS;
-      })
-      .addCase(createUserAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(deleteUserAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(deleteUserAsync.fulfilled, (state, action) => {
         state.items = state.items.filter(item => state.selected?.id !== item.id);
         state.selected = {};
-        state.status = SUCCESS;
-      })
-      .addCase(deleteUserAsync.rejected, (state, action) => {
-        state.status = FAIL;
       })
   },
 });

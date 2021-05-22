@@ -13,6 +13,9 @@ import { UpdateCompany } from './features/company/UpdateCompany';
 import { RoomList } from './features/room/RoomList';
 import { CreateRoom } from './features/room/CreateRoom';
 import { UpdateRoom } from './features/room/UpdateRoom';
+import { MeetingList } from './features/meeting/MeetingList';
+import { CreateMeeting } from './features/meeting/CreateMeeting';
+import { UpdateMeeting } from './features/meeting/UpdateMeeting';
 import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from './theme'
 import { Navbar } from './components';
@@ -29,7 +32,11 @@ const links = [
   {
     label: 'Rooms',
     url: '/rooms'
-  }
+  },
+  {
+    label: 'Meetings',
+    url: '/meetings'
+  },
 ]
 
 function App() {
@@ -47,6 +54,9 @@ function App() {
           <Route path="rooms" element={<RoomList/>} />
           <Route path="rooms/create" element={<CreateRoom/>} />
           <Route path="rooms/:id" element={<UpdateRoom/>} />
+          <Route path="meetings" element={<MeetingList/>} />
+          <Route path="meetings/create" element={<CreateMeeting/>} />
+          <Route path="meetings/:id" element={<UpdateMeeting/>} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

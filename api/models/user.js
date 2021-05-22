@@ -3,7 +3,13 @@ import { NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../utils/constants';
 export default (sequelize, DataTypes, Model) => {
   class User extends Model {
     static associate(models) {
-      this.belongsTo(models.company)
+      this.belongsTo(models.company);
+      this.belongsToMany(models.meeting, {
+        through: 'userMeeting',
+        as: 'meetings',
+        foreignKey: 'userId',
+        otherKey: 'meetingId'
+      });
     }
   }
   User.init({

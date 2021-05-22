@@ -11,6 +11,8 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
 import { UserForm } from './components/UserForm';
 import { useParams } from 'react-router-dom';
+import { IDLE } from '../../constants';
+import { setServerErrors } from '../../utils/setServerErrors';
 
 export function UpdateUser() {
   const toast = useToast()
@@ -22,7 +24,7 @@ export function UpdateUser() {
   const { id } = useParams();
 
   useEffect(() => {
-    if (companyStatus === 'idle') {
+    if (companyStatus === IDLE) {
       dispatch(fetchCompaniesAsync());
     }
   }, [dispatch, companyStatus]);
@@ -43,14 +45,8 @@ export function UpdateUser() {
         title: 'User updated.',
         status: 'success',
       })
-    } catch (errors) {
-      errors.forEach((error) => {
-        setError(error.path, {
-          type: 'server',
-          message: error.message
-        })
-      });
-
+    } catch (e) {
+      setServerErrors(e, setError)
       toast({
         title: 'Failed to update user.',
         status: 'error',

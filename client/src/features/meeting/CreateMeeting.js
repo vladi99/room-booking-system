@@ -3,38 +3,47 @@ import { Heading, Container, useToast, } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
-import { RoomForm } from './components/RoomForm';
-import { createRoomAsync } from './roomSlice';
-import { fetchCompaniesAsync, selectCompanies, selectCompanyStatus } from '../company/companySlice';
+import { MeetingForm } from './components/MeetingForm';
+import { createMeetingAsync } from './meetingSlice';
+import { fetchUsersAsync, selectUserStatus, selectUsers } from '../user/userSlice';
+import { fetchRoomsAsync, selectRooms, selectRoomStatus } from '../room/roomSlice';
 import { IDLE } from '../../constants';
 import { setServerErrors } from '../../utils/setServerErrors';
 
-export function CreateRoom() {
+export function CreateMeeting() {
   const toast = useToast()
   const dispatch = useDispatch();
   const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset, control } = useForm();
-  const companyStatus = useSelector(selectCompanyStatus);
-  const companies = useSelector(selectCompanies);
+  const users = useSelector(selectUsers);
+  const rooms = useSelector(selectRooms);
+  const userStatus = useSelector(selectUserStatus);
+  const roomStatus = useSelector(selectRoomStatus);
 
   useEffect(() => {
-    if (companyStatus === IDLE) {
-      dispatch(fetchCompaniesAsync());
+    if (roomStatus === IDLE) {
+      dispatch(fetchRoomsAsync());
     }
-  }, [dispatch, companyStatus]);
+  }, [dispatch, roomStatus]);
+
+  useEffect(() => {
+    if (userStatus === IDLE) {
+      dispatch(fetchUsersAsync());
+    }
+  }, [dispatch, userStatus]);
 
   const onSubmit = async (data) => {
     try {
-      const resultAction = await dispatch(createRoomAsync(data));
+      const resultAction = await dispatch(createMeetingAsync(data));
       unwrapResult(resultAction);
       reset();
       toast({
-        title: 'Room created.',
+        title: 'Meeting created.',
         status: 'success',
       })
     } catch (e) {
       setServerErrors(e, setError);
       toast({
-        title: 'Failed to create room.',
+        title: 'Failed to create meeting.',
         status: 'error',
       })
     }
@@ -43,15 +52,16 @@ export function CreateRoom() {
   return (
     <Container>
       <Heading as="h1" my={6} textAlign="center">
-        Create room
+        Create meeting
       </Heading>
-      <RoomForm
+      <MeetingForm
         onSubmit={handleSubmit(onSubmit)}
         errors={errors}
         isSubmitting={isSubmitting}
         register={register}
         control={control}
-        companies={companies}
+        users={users}
+        rooms={rooms}
       />
     </Container>
   );

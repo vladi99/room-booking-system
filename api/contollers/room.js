@@ -9,7 +9,7 @@ export function findAll(req, res) {
       as: 'companies'
     }
   }).then(data => res.send(data))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 
 export function findOne(req, res) {
@@ -22,7 +22,7 @@ export function findOne(req, res) {
     }
   })
     .then(data => res.send(data))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 
 export async function create(req, res) {

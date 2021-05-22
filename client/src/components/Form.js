@@ -3,10 +3,12 @@ import {
   FormLabel as ChakraFormLabel,
   Input as ChakraFormInput,
   FormErrorMessage as ChakraFormErrorMessage,
-  Select as ChakraSelect
+  Select as ChakraSelect,
 } from '@chakra-ui/react'
-import { CUIAutoComplete } from 'chakra-ui-autocomplete'
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
+import ReactDatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 export function FormControl(props) {
   return <ChakraFormControl {...props}/>
@@ -28,6 +30,18 @@ export const Select = forwardRef((props, ref) => (
   <ChakraSelect ref={ref} {...props}/>
 ));
 
-export const Autocomplete = forwardRef((props, ref) => (
-  <CUIAutoComplete ref={ref} {...props}/>
-));
+export const DatePicker = forwardRef((props, ref) => {
+  return (
+    <ReactDatePicker
+      ref={ref}
+      showTimeSelect
+      timeFormat="HH:mm"
+      timeIntervals={15}
+      timeCaption="time"
+      dateFormat="MMMM d, yyyy h:mm aa"
+      customInput={<Input/>}
+      {...props}
+    />
+  );
+});
+

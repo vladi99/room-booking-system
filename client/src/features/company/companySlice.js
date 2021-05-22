@@ -5,7 +5,6 @@ import { FAIL, IDLE, LOADING, SUCCESS } from '../../constants';
 const initialState = {
   items: [],
   selected: { },
-  selectedItems: [],
   status: IDLE,
 };
 
@@ -49,9 +48,6 @@ export const companySlice = createSlice({
     selectItem(state, action) {
       state.selected = action.payload;
     },
-    selectItems(state, action) {
-      state.selectedItems = action.payload || [];
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -65,60 +61,28 @@ export const companySlice = createSlice({
       .addCase(fetchCompaniesAsync.rejected, (state, action) => {
         state.status = FAIL;
       })
-      .addCase(fetchCompanyAsync.pending, (state) => {
-        state.status = LOADING;
-      })
       .addCase(fetchCompanyAsync.fulfilled, (state, action) => {
-        state.status = SUCCESS
         state.selected = action.payload;
-      })
-      .addCase(fetchCompanyAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(updateCompanyAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(updateCompanyAsync.fulfilled, (state, action) => {
         const index = state.items.findIndex((item) => item.id === state.selected.id);
         state.items[index] = action.payload;
         state.selected = action.payload;
-        state.status = SUCCESS;
-      })
-      .addCase(updateCompanyAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(createCompanyAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(createCompanyAsync.fulfilled, (state, action) => {
         state.items.push(action.payload);
-        state.status = SUCCESS;
-      })
-      .addCase(createCompanyAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(deleteCompanyAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(deleteCompanyAsync.fulfilled, (state, action) => {
         state.items = state.items.filter(item => state.selected?.id !== item.id);
         state.selected = {};
-        state.status = SUCCESS;
-      })
-      .addCase(deleteCompanyAsync.rejected, (state, action) => {
-        state.status = FAIL;
       })
   },
 });
 
 export const selectCompanies = (state) => state.company.items;
-export const selectCompaniesLabels = (state) => state.company.items?.map(({id, name}) => ({value: id, label: name}));
 export const selectCompanyStatus = (state) => state.company.status;
 export const selectSelectedCompany = (state) => state.company.selected;
-export const selectSelectedCompanies = (state) => state.company.selectedItems;
-export const selectSelectedCompaniesData = (state) => state.company.selectedItems?.map(({value, label}) => ({id: value, name: label}));
 
 export const { selectItem } = companySlice.actions
-export const { selectItems } = companySlice.actions
 
 export default companySlice.reducer;

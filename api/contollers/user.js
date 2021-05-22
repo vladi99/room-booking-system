@@ -11,7 +11,7 @@ export function findAll(req, res) {
       }
     }
   }).then(data => res.send(data))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 
 export function findOne(req, res) {
@@ -19,7 +19,7 @@ export function findOne(req, res) {
 
   return user.findByPk(id)
     .then(data => res.send(data))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 
 export function create(req, res) {
@@ -27,7 +27,7 @@ export function create(req, res) {
 
   return user.create({ firstName, lastName, email, companyId })
     .then(data => res.send(data))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 
 export function update(req, res) {
@@ -36,7 +36,7 @@ export function update(req, res) {
   return user.update(req.body, {
     where: { id }
   }).then(() => res.send(req.body))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 
 export function del(req, res) {
@@ -45,6 +45,6 @@ export function del(req, res) {
   return user.destroy({
     where: { id }
   }).then(() => res.sendStatus(200))
-    .catch(err => res.status(400).send(err.errors))
+    .catch(err => res.status(400).send(err))
 }
 

@@ -14,6 +14,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
 import { CompanyForm } from './components/CompanyForm';
 import { useParams } from 'react-router-dom';
+import { setServerErrors } from '../../utils/setServerErrors';
 
 export function UpdateCompany() {
   const toast = useToast()
@@ -38,14 +39,8 @@ export function UpdateCompany() {
         title: 'Company updated.',
         status: 'success',
       })
-    } catch (errors) {
-      errors.forEach((error) => {
-        setError(error.path, {
-          type: 'server',
-          message: error.message
-        })
-      });
-
+    } catch (e) {
+      setServerErrors(e, setError)
       toast({
         title: 'Failed to update company.',
         status: 'error',

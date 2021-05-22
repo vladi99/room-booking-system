@@ -7,6 +7,7 @@ import waitForDbConnection from './utils/wait-for-db-connection'
 import userRoute from './routes/user'
 import companyRoute from './routes/company'
 import roomRoute from './routes/room'
+import meetingRoute from './routes/meeting'
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 userRoute(app);
 companyRoute(app);
 roomRoute(app);
+meetingRoute(app);
 
 const PORT = process.env.PORT;
 

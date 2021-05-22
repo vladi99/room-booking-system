@@ -6,9 +6,10 @@ import {
   Input,
   Flex,
   FormErrorMessage,
-  Autocomplete
+  Autocomplete,
 } from '../../../components';
 import { NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../../../constants';
+import { Controller } from 'react-hook-form';
 
 export function RoomForm(props) {
   const {
@@ -18,13 +19,12 @@ export function RoomForm(props) {
     register,
     companies,
     isUpdate,
-    handleCompaniesSelect,
-    selectedCompanies,
+    control
   } = props;
 
   return (
-    <form noValidate onSubmit={onSubmit}>
-      <FormControl mb={4} isRequired isInvalid={errors?.name}>
+    <form autoComplete="off" noValidate onSubmit={onSubmit}>
+      <FormControl mb={3} isRequired isInvalid={errors?.name}>
         <FormLabel>Name</FormLabel>
         <Input
           type="text"
@@ -39,13 +39,23 @@ export function RoomForm(props) {
         {errors?.name?.type === 'minLength' && <FormErrorMessage>Room name cannot be less {NAME_MIN_LENGTH} characters</FormErrorMessage>}
         {errors?.name?.type === 'server' && <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>}
       </FormControl>
-      <Autocomplete
-        disableCreateItem
-        label="Select company"
-        items={companies}
-        selectedItems={selectedCompanies}
-        onSelectedItemsChange={(changes) => handleCompaniesSelect(changes.selectedItems)}
-      />
+      <FormControl mb={3} isRequired isInvalid={errors?.companies}>
+        <FormLabel>Companies</FormLabel>
+        <Controller
+          control={control}
+          name="companies"
+          defaultValue={[]}
+          render={({ field }) => (
+            <Autocomplete
+              valueKey="id"
+              labelKey="name"
+              options={companies}
+              result={field.value}
+              setResult={field.onChange}
+            />
+          )}
+        />
+      </FormControl>
       <Flex>
         <Button
           isLoading={isSubmitting}

@@ -100,3 +100,7 @@ npx sequelize-cli migration:generate --name <name-of-migration>
 # Generate model + migration (make sure you change migration file extension to cjs)
 npx sequelize-cli model:generate --name <ModelName> --attributes <attribute-name>:<attribute-type>,...
 ```
+
+## DB Schema
+
+![Schema](/screenshots/schema.png)

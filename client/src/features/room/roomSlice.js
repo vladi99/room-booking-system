@@ -11,7 +11,6 @@ import { FAIL, IDLE, LOADING, SUCCESS } from '../../constants';
 const initialState = {
   items: [],
   selected: { },
-  selectedCompanies: [],
   status: IDLE,
 };
 
@@ -63,53 +62,25 @@ export const roomSlice = createSlice({
       })
       .addCase(fetchRoomsAsync.fulfilled, (state, action) => {
         state.status = SUCCESS
-        state.items.push(...action.payload);
+        state.items = action.payload;
       })
       .addCase(fetchRoomsAsync.rejected, (state, action) => {
         state.status = FAIL;
       })
-      .addCase(fetchRoomAsync.pending, (state) => {
-        state.status = LOADING;
-      })
       .addCase(fetchRoomAsync.fulfilled, (state, action) => {
-        state.status = SUCCESS
         state.selected = action.payload;
-      })
-      .addCase(fetchRoomAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(updateRoomAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(updateRoomAsync.fulfilled, (state, action) => {
         const index = state.items.findIndex((item) => item.id === state.selected.id);
         state.items[index] = action.payload;
         state.selected = action.payload;
-        state.status = SUCCESS;
-      })
-      .addCase(updateRoomAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(createRoomAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(createRoomAsync.fulfilled, (state, action) => {
         state.items.push(action.payload);
-        state.status = SUCCESS;
-      })
-      .addCase(createRoomAsync.rejected, (state, action) => {
-        state.status = FAIL;
-      })
-      .addCase(deleteRoomAsync.pending, (state, action) => {
-        state.status = LOADING;
       })
       .addCase(deleteRoomAsync.fulfilled, (state, action) => {
         state.items = state.items.filter(item => state.selected?.id !== item.id);
         state.selected = {};
-        state.status = SUCCESS;
-      })
-      .addCase(deleteRoomAsync.rejected, (state, action) => {
-        state.status = FAIL;
       })
   },
 });

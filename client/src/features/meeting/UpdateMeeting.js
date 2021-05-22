@@ -3,50 +3,59 @@ import { Heading, Container, useToast, } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
-import { RoomForm } from './components/RoomForm';
+import { MeetingForm } from './components/MeetingForm';
 import { useParams } from 'react-router-dom';
 import { IDLE } from '../../constants';
-import { fetchCompaniesAsync, selectCompanies, selectCompanyStatus } from '../company/companySlice';
-import { fetchRoomAsync, selectSelectedRoom, updateRoomAsync } from './roomSlice';
+import { fetchUsersAsync, selectUsers, selectUserStatus } from '../user/userSlice';
+import { fetchRoomsAsync, selectRooms, selectRoomStatus } from '../room/roomSlice';
+import { updateMeetingAsync, fetchMeetingAsync, selectSelectedMeeting } from './meetingSlice';
 import { setServerErrors } from '../../utils/setServerErrors';
 
-export function UpdateRoom() {
+export function UpdateMeeting() {
   const toast = useToast()
   const dispatch = useDispatch();
   const { handleSubmit, setValue, register, setError, formState: { errors, isSubmitting }, reset, control } = useForm();
-  const companyStatus = useSelector(selectCompanyStatus);
-  const companies = useSelector(selectCompanies);
-  const room = useSelector(selectSelectedRoom);
+  const users = useSelector(selectUsers);
+  const rooms = useSelector(selectRooms);
+  const userStatus = useSelector(selectUserStatus);
+  const roomStatus = useSelector(selectRoomStatus);
+  const meeting = useSelector(selectSelectedMeeting);
   const { id } = useParams();
 
   useEffect(() => {
-    if (companyStatus === IDLE) {
-      dispatch(fetchCompaniesAsync());
+    if (userStatus === IDLE) {
+      dispatch(fetchUsersAsync());
     }
-  }, [dispatch, companyStatus]);
+  }, [dispatch, userStatus]);
 
   useEffect(() => {
-    const { companies, ...roomValues } = room;
-    reset(roomValues);
-    setValue('companies', companies)
-  }, [room, reset, dispatch]);
+    if (roomStatus === IDLE) {
+      dispatch(fetchRoomsAsync());
+    }
+  }, [dispatch, roomStatus]);
 
   useEffect(() => {
-    dispatch(fetchRoomAsync(id))
+    const { users, ...meet } = meeting;
+    reset(meet);
+    setValue('users', users)
+  }, [meeting, reset, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchMeetingAsync(id))
   }, [dispatch, id]);
 
   const onSubmit = async (data) => {
     try {
-      const resultAction = await dispatch(updateRoomAsync(data));
+      const resultAction = await dispatch(updateMeetingAsync(data));
       unwrapResult(resultAction);
       toast({
-        title: 'Room updated.',
+        title: 'Meeting updated.',
         status: 'success',
       })
     } catch (e) {
       setServerErrors(e, setError);
       toast({
-        title: 'Failed to update room.',
+        title: 'Failed to update meeting.',
         status: 'error',
       })
     }
@@ -55,16 +64,17 @@ export function UpdateRoom() {
   return (
     <Container>
       <Heading as="h1" my={6} textAlign="center">
-        Update room
+        Update meeting
       </Heading>
-      <RoomForm
+      <MeetingForm
         isUpdate
         onSubmit={handleSubmit(onSubmit)}
         errors={errors}
         isSubmitting={isSubmitting}
         register={register}
         control={control}
-        companies={companies}
+        users={users}
+        rooms={rooms}
       />
     </Container>
   );

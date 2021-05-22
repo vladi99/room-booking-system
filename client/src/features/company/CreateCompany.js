@@ -9,6 +9,8 @@ import { createCompanyAsync, fetchCompaniesAsync, selectCompanyStatus } from './
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
 import { CompanyForm } from './components/CompanyForm';
+import { IDLE } from '../../constants';
+import { setServerErrors } from '../../utils/setServerErrors';
 
 export function CreateCompany() {
   const toast = useToast()
@@ -16,7 +18,7 @@ export function CreateCompany() {
   const companyStatus = useSelector(selectCompanyStatus);
 
   useEffect(() => {
-    if (companyStatus === 'idle') {
+    if (companyStatus === IDLE) {
       dispatch(fetchCompaniesAsync());
     }
   }, [dispatch, companyStatus]);
@@ -32,14 +34,8 @@ export function CreateCompany() {
         title: 'Company created.',
         status: 'success',
       })
-    } catch (errors) {
-      errors.forEach((error) => {
-        setError(error.path, {
-          type: 'server',
-          message: error.message
-        })
-      });
-
+    } catch (e) {
+      setServerErrors(e, setError)
       toast({
         title: 'Failed to create company.',
         status: 'error',

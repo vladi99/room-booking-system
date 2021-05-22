@@ -10,20 +10,21 @@ import { fetchCompaniesAsync, selectCompanies, selectCompanyStatus } from '../co
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
 import { UserForm } from './components/UserForm';
+import { IDLE } from '../../constants';
+import { setServerErrors } from '../../utils/setServerErrors';
 
 export function CreateUser() {
   const toast = useToast()
   const dispatch = useDispatch();
   const companyStatus = useSelector(selectCompanyStatus);
   const companies = useSelector(selectCompanies);
+  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset } = useForm();
 
   useEffect(() => {
-    if (companyStatus === 'idle') {
+    if (companyStatus === IDLE) {
       dispatch(fetchCompaniesAsync());
     }
   }, [dispatch, companyStatus]);
-
-  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset } = useForm();
 
   const onSubmit = async (data) => {
     try {
@@ -34,14 +35,8 @@ export function CreateUser() {
         title: 'User created.',
         status: 'success',
       })
-    } catch (errors) {
-      errors.forEach((error) => {
-        setError(error.path, {
-          type: 'server',
-          message: error.message
-        })
-      });
-
+    } catch (e) {
+      setServerErrors(e, setError)
       toast({
         title: 'Failed to create user.',
         status: 'error',
