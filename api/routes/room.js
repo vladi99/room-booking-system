@@ -1,13 +1,15 @@
 import express from 'express';
-import { create, findAll, del, findOne, update } from '../contollers/room';
+import { create, findAll, del, findOne, update, findAllRoomsMeetings } from '../contollers/room';
+import { verifyToken, isCompanyAdmin } from '../middlewares/authJwt'
+import { verifyCompanyId } from '../middlewares/company';
 
-export default function (app) {
-  const router = express.Router();
-  router.get('/', findAll);
-  router.get('/:id', findOne);
-  router.post('/', create);
-  router.put('/:id', update);
-  router.delete('/:id', del);
+const router = express.Router({ mergeParams : true });
 
-  app.use('/api/rooms', router);
-}
+router.get('/', verifyToken, verifyCompanyId, findAll);
+router.get('/:id', verifyToken, verifyCompanyId, findOne);
+router.get('/:id/meetings', verifyToken, verifyCompanyId, findAllRoomsMeetings);
+router.post('/', verifyToken, isCompanyAdmin, verifyCompanyId, create);
+router.put('/:id', verifyToken, isCompanyAdmin, verifyCompanyId, update);
+router.delete('/:id', verifyToken, isCompanyAdmin, verifyCompanyId, del);
+
+export default router;

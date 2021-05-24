@@ -38,7 +38,7 @@ export function UpdateMeeting() {
     const { users, ...meet } = meeting;
     reset(meet);
     setValue('users', users)
-  }, [meeting, reset, dispatch]);
+  }, [meeting, setValue, reset]);
 
   useEffect(() => {
     dispatch(fetchMeetingAsync(id))

@@ -1,21 +1,20 @@
 import models from '../models'
-import Sequelize from 'sequelize';
 
 const { company, sequelize } = models
 
 export function findAll(req, res) {
-  return company.findAll({
-    where: {
-      name: {
-        [Sequelize.Op.substring]: req.query.name || ''
-      }
-    }
-  }).then(data => res.send(data))
+  return company.findAll()
+    .then(data => res.send(data))
     .catch(err => res.status(400).send(err))
 }
 
-export function findOne(req, res) {
+export async function findOne(req, res) {
   const { id } = req.params;
+  const isAdmin = await req.current.isAdmin();
+
+  if (!isAdmin && id !== req.current.companyId) {
+    return res.status(403);
+  }
 
   return company.findByPk(id)
     .then(data => res.send(data))
@@ -30,8 +29,14 @@ export function create(req, res) {
     .catch(err => res.status(400).send(err))
 }
 
-export function update(req, res) {
+export async function update(req, res) {
   const { id } = req.params;
+
+  const isAdmin = await req.current.isAdmin();
+
+  if (!isAdmin && id !== req.current.companyId) {
+    return res.status(403);
+  }
 
   return company.update(req.body, {
     where: { id }

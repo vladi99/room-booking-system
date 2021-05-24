@@ -3,6 +3,7 @@ import { NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../utils/constants';
 export default (sequelize, DataTypes, Model) => {
   class Meeting extends Model {
     static associate(models) {
+      this.belongsTo(models.room);
       this.belongsToMany(models.user, {
         through: 'userMeetings',
         as: 'users',
@@ -26,13 +27,7 @@ export default (sequelize, DataTypes, Model) => {
       allowNull: false,
       type: DataTypes.DATE,
       validate: {
-        isDate: {
-          args: true,
-          msg: 'Start date must be a valid date.'
-        },
-        isAfter: {
-          msg: 'Start date cannot be in the past.'
-        },
+        isDate: true,
         isBeforeEnd(value) {
           if (value > this.end) {
             throw new Error('Start date cannot be after end date');
@@ -44,10 +39,7 @@ export default (sequelize, DataTypes, Model) => {
       allowNull: false,
       type: DataTypes.DATE,
       validate: {
-        isDate: {
-          args: true,
-          msg: 'End date must be a valid date.'
-        },
+        isDate: true,
         isAfterStart(value) {
           if (value < this.start) {
             throw new Error('End date cannot be before start date');

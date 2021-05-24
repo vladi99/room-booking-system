@@ -39,23 +39,25 @@ export function RoomForm(props) {
         {errors?.name?.type === 'minLength' && <FormErrorMessage>Room name cannot be less {NAME_MIN_LENGTH} characters</FormErrorMessage>}
         {errors?.name?.type === 'server' && <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>}
       </FormControl>
-      <FormControl mb={3} isRequired isInvalid={errors?.companies}>
-        <FormLabel>Companies</FormLabel>
-        <Controller
-          control={control}
-          name="companies"
-          defaultValue={[]}
-          render={({ field }) => (
-            <Autocomplete
-              valueKey="id"
-              labelKey="name"
-              options={companies}
-              result={field.value}
-              setResult={field.onChange}
-            />
-          )}
-        />
-      </FormControl>
+      {isUpdate &&
+        <FormControl mb={3} isRequired isInvalid={errors?.companies}>
+          <FormLabel>Companies</FormLabel>
+          <Controller
+            control={control}
+            name="companies"
+            defaultValue={[]}
+            render={({ field }) => (
+              <Autocomplete
+                valueKey="id"
+                labelKey="name"
+                options={companies}
+                result={field.value}
+                setResult={field.onChange}
+              />
+            )}
+          />
+        </FormControl>
+      }
       <Flex>
         <Button
           isLoading={isSubmitting}

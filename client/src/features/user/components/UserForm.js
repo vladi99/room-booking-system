@@ -6,9 +6,10 @@ import {
   Input,
   Flex,
   FormErrorMessage,
-  Select
+  Select, Autocomplete
 } from '../../../components';
 import { ALPHA_NUMERIC, NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../../../constants';
+import { Controller } from 'react-hook-form';
 
 export function UserForm(props) {
   const {
@@ -17,7 +18,9 @@ export function UserForm(props) {
     isSubmitting,
     register,
     companies,
-    isUpdate
+    isUpdate,
+    roles,
+    control
   } = props;
 
   return (
@@ -80,6 +83,24 @@ export function UserForm(props) {
           ))}
         </Select>
         {errors?.companyId?.type === 'required' && <FormErrorMessage>Company is required</FormErrorMessage>}
+      </FormControl>
+      <FormControl mb={3} isRequired isInvalid={errors?.roles}>
+        <FormLabel>Roles</FormLabel>
+        <Controller
+          control={control}
+          name="roles"
+          defaultValue={[]}
+          render={({ field }) => (
+            <Autocomplete
+              valueKey="id"
+              labelKey="name"
+              options={roles}
+              result={field.value}
+              setResult={field.onChange}
+            />
+          )}
+        />
+        {errors?.roles?.type === 'server' && <FormErrorMessage>{errors?.roles?.message}</FormErrorMessage>}
       </FormControl>
       <Flex>
         <Button

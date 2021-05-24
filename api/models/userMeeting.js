@@ -5,7 +5,8 @@ export default (sequelize, DataTypes, Model) => {
   }
   UserMeeting.init({
     userId: DataTypes.INTEGER,
-    meetingId: DataTypes.INTEGER
+    meetingId: DataTypes.INTEGER,
+    organizer: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'userMeeting',

@@ -4,10 +4,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import db from './models';
 import waitForDbConnection from './utils/wait-for-db-connection'
-import userRoute from './routes/user'
-import companyRoute from './routes/company'
-import roomRoute from './routes/room'
-import meetingRoute from './routes/meeting'
+import { setHeaders } from './middlewares/headers';
+import routes from './routes'
 
 const app = express();
 
@@ -15,20 +13,15 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(setHeaders)
 
 await waitForDbConnection(db.sequelize, 1000);
 
 // run pending migrations
+// TODO: decouple migrations from server startup
 execSync('sequelize db:migrate', { stdio: 'inherit' });
 
-app.get('/', (req, res) => {
-  res.json({message: 'Hello world.'});
-});
-
-userRoute(app);
-companyRoute(app);
-roomRoute(app);
-meetingRoute(app);
+app.use('/api', routes);
 
 const PORT = process.env.PORT;
 

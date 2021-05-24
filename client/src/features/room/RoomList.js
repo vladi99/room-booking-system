@@ -65,7 +65,7 @@ export function RoomList() {
   return (
     <>
       <Container maxW="3xl">
-        <TableHeading title="Rooms" addLink="/rooms/create"/>
+        <TableHeading title="Rooms" addLink="/app/rooms/create"/>
 
         <Table colorScheme="teal" variant="striped">
           <Thead>
@@ -82,7 +82,7 @@ export function RoomList() {
                 <Td>{room.name}</Td>
                 <Td>
                   <Stack spacing={3} direction="row" align="center">
-                    <Link to={`/rooms/${room.id}`}>
+                    <Link to={`/app/rooms/${room.id}`}>
                       <IconButton
                         colorScheme="yellow"
                         aria-label="Edit"

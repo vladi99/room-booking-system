@@ -1,13 +1,16 @@
 import express from 'express';
-import { create, findAll, del, findOne, update } from '../contollers/meeting';
+import { findOne, findAll, update, create, del } from '../contollers/meeting';
+import { verifyToken } from '../middlewares/authJwt';
+import { verifyUserId } from '../middlewares/user';
 
-export default function (app) {
-  const router = express.Router();
-  router.get('/', findAll);
-  router.get('/:id', findOne);
-  router.post('/', create);
-  router.put('/:id', update);
-  router.delete('/:id', del);
+const router = express.Router({ mergeParams : true });
 
-  app.use('/api/meetings', router);
-}
+const verifiers = [verifyToken, verifyUserId]
+
+router.get('/', ...verifiers, findAll);
+router.get('/:id', ...verifiers, findOne);
+router.post('/', ...verifiers, create);
+router.put('/:id', ...verifiers, update);
+router.delete('/:id', ...verifiers, del);
+
+export default router;

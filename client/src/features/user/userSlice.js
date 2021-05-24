@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createUser, deleteUser, fetchUser, fetchUsers, updateUser } from './userAPI';
+import { createUser, deleteUser, fetchUser, fetchUserRoles, fetchUsers, updateUser } from './userAPI';
 import { FAIL, IDLE, LOADING, SUCCESS } from '../../constants';
 
 const initialState = {
   items: [],
   selected: { },
+  roles: [],
+  rolesStatus: IDLE,
   status: IDLE,
 };
 
@@ -41,6 +43,11 @@ export const updateUserAsync = createAsyncThunk('user/updateUser', async (user, 
   }
 });
 
+export const fetchUserRolesAsync = createAsyncThunk('user/fetchUserRoles', async () => {
+  const res = await fetchUserRoles();
+  return res.data;
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -60,6 +67,16 @@ export const userSlice = createSlice({
       })
       .addCase(fetchUsersAsync.rejected, (state, action) => {
         state.status = FAIL;
+      })
+      .addCase(fetchUserRolesAsync.pending, (state) => {
+        state.rolesStatus = LOADING;
+      })
+      .addCase(fetchUserRolesAsync.fulfilled, (state, action) => {
+        state.rolesStatus = SUCCESS
+        state.roles = action.payload;
+      })
+      .addCase(fetchUserRolesAsync.rejected, (state, action) => {
+        state.rolesStatus = FAIL;
       })
       .addCase(fetchUserAsync.fulfilled, (state, action) => {
         state.selected = action.payload;
@@ -82,6 +99,8 @@ export const userSlice = createSlice({
 export const selectUsers = (state) => state.user.items;
 export const selectUserStatus = (state) => state.user.status;
 export const selectSelectedUser = (state) => state.user.selected;
+export const selectRoles = (state) => state.user.roles;
+export const selectRolesStatus = (state) => state.user.rolesStatus;
 
 export const { selectItem } = userSlice.actions
 

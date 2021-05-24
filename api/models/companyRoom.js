@@ -5,7 +5,8 @@ export default (sequelize, DataTypes, Model) => {
   }
   CompanyRoom.init({
     roomId: DataTypes.INTEGER,
-    companyId: DataTypes.INTEGER
+    companyId: DataTypes.INTEGER,
+    owner: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'companyRoom',

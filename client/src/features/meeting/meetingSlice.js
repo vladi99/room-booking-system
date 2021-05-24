@@ -14,33 +14,38 @@ const initialState = {
   status: IDLE,
 };
 
-export const fetchMeetingsAsync = createAsyncThunk('meeting/fetchMeetings', async () => {
-  const res = await fetchMeetings();
+export const fetchMeetingsAsync = createAsyncThunk('meeting/fetchMeetings', async (_, { getState }) => {
+  const userId = getState().auth.currentId;
+  const res = await fetchMeetings(userId);
   return res.data;
 });
 
-export const fetchMeetingAsync = createAsyncThunk('meeting/fetchMeeting', async (id) => {
-  const res = await fetchMeeting(id);
+export const fetchMeetingAsync = createAsyncThunk('meeting/fetchMeeting', async (id, { getState }) => {
+  const userId = getState().auth.currentId;
+  const res = await fetchMeeting(userId, id);
   return res.data;
 });
 
-export const deleteMeetingAsync = createAsyncThunk('meeting/deleteMeeting', async (id) => {
-  const res = await deleteMeeting(id);
+export const deleteMeetingAsync = createAsyncThunk('meeting/deleteMeeting', async (id, { getState }) => {
+  const userId = getState().auth.currentId;
+  const res = await deleteMeeting(userId, id);
   return res.data;
 });
 
-export const createMeetingAsync = createAsyncThunk('meeting/createMeeting', async (meeting, { rejectWithValue }) => {
+export const createMeetingAsync = createAsyncThunk('meeting/createMeeting', async (meeting, { getState, rejectWithValue }) => {
   try {
-    const res = await createMeeting(meeting);
+    const userId = getState().auth.currentId;
+    const res = await createMeeting(userId, meeting);
     return res.data
   } catch (err) {
     return rejectWithValue(err.response.data)
   }
 });
 
-export const updateMeetingAsync = createAsyncThunk('meeting/updateMeeting', async (meeting, { rejectWithValue }) => {
+export const updateMeetingAsync = createAsyncThunk('meeting/updateMeeting', async (meeting, { getState, rejectWithValue }) => {
   try {
-    const res = await updateMeeting(meeting);
+    const userId = getState().auth.currentId;
+    const res = await updateMeeting(userId, meeting);
     return res.data
   } catch (err) {
     return rejectWithValue(err.response.data)

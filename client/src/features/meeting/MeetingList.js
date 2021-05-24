@@ -65,7 +65,7 @@ export function MeetingList() {
   return (
     <>
       <Container maxW="3xl">
-        <TableHeading title="Meetings" addLink="/meetings/create"/>
+        <TableHeading title="Meetings" addLink="/app/meetings/create"/>
 
         <Table colorScheme="teal" variant="striped">
           <Thead>
@@ -86,7 +86,7 @@ export function MeetingList() {
                 <Td>{meeting.end}</Td>
                 <Td>
                   <Stack spacing={3} direction="row" align="center">
-                    <Link to={`/meetings/${meeting.id}`}>
+                    <Link to={`/app/meetings/${meeting.id}`}>
                       <IconButton
                         colorScheme="yellow"
                         aria-label="Edit"

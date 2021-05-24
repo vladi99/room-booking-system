@@ -1,42 +1,92 @@
 import models from '../models'
+import { ROLES } from '../models/role';
 import Sequelize from 'sequelize';
 
-const { user } = models
+const { user, role, sequelize } = models;
+const attributes = { exclude: ['password'] };
 
-export function findAll(req, res) {
-  return user.findAll({
-    where: {
-      email: {
-        [Sequelize.Op.substring]: req.query.email || ''
-      }
+const include = {
+  model: role,
+  as: 'roles',
+  through: {
+    attributes: []
+  }
+};
+
+export async function findAll(req, res) {
+  try {
+    const dbUsers = await user.findAll({ attributes, include });
+    res.send(dbUsers);
+  } catch (e) {
+    res.status(400).send(e)
+  }
+}
+
+export async function findOne(req, res) {
+  const { id } = req.params;
+  const isAdmin = await req.current.isAdmin();
+  if (+req.current.id !== +id && !isAdmin) {
+    return res.sendStatus(403);
+  }
+
+  return user.findByPk(id, { attributes, include })
+    .then(data => res.send(data))
+    .catch(err => res.status(400).send(err))
+}
+
+export async function create(req, res) {
+  // TODO: remove hardcoded password, send email with user able to create password
+  const { firstName, lastName, email, companyId, roles, password = '12345678' } = req.body;
+
+  const existingUser = await user.findOne({ where: { email } });
+
+  if (existingUser) {
+    res.status(400).send({ errors: [{ path: 'email', message: 'Email is already in use.'}] });
+    return;
+  }
+
+  if (roles.some(role => !ROLES.includes(role.name))) {
+    res.status(400).send({ errors: [{ path: 'roles', message: 'Role does not exist.'}] });
+    return;
+  }
+
+  const transaction = await sequelize.transaction();
+
+  try {
+    const dbUser = await user.create({ firstName, lastName, email, companyId, password }, { transaction });
+
+    if (roles) {
+      const dbRoles = await role.findAll({
+        where: {
+          id: {
+            [Sequelize.Op.or]: roles.map(({id}) => id)
+          }
+        }
+      });
+      await dbUser.setRoles(dbRoles, { transaction });
     }
-  }).then(data => res.send(data))
-    .catch(err => res.status(400).send(err))
+
+    await transaction.commit();
+    res.status(200).send({
+      ...dbUser.toJSON(),
+      password: undefined
+    })
+  } catch (e) {
+    await transaction.rollback();
+    res.status(400).send(e);
+  }
 }
 
-export function findOne(req, res) {
+export async function update(req, res) {
   const { id } = req.params;
 
-  return user.findByPk(id)
-    .then(data => res.send(data))
-    .catch(err => res.status(400).send(err))
-}
-
-export function create(req, res) {
-  const { firstName, lastName, email, companyId } = req.body;
-
-  return user.create({ firstName, lastName, email, companyId })
-    .then(data => res.send(data))
-    .catch(err => res.status(400).send(err))
-}
-
-export function update(req, res) {
-  const { id } = req.params;
-
-  return user.update(req.body, {
-    where: { id }
-  }).then(() => res.send(req.body))
-    .catch(err => res.status(400).send(err))
+  try {
+    await user.update(req.body, { where: { id } });
+    const dbUser = await user.findByPk(id, { attributes });
+    res.send(dbUser)
+  } catch (e) {
+    res.status(400).send(e)
+  }
 }
 
 export function del(req, res) {

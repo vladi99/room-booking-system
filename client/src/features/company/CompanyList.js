@@ -64,7 +64,7 @@ export function CompanyList() {
   return (
     <>
       <Container maxW="3xl">
-        <TableHeading title="Companies" addLink="/companies/create"/>
+        <TableHeading title="Companies" addLink="/app/companies/create"/>
 
         <Table colorScheme="teal" variant="striped">
           <Thead>
@@ -81,7 +81,7 @@ export function CompanyList() {
                 <Td>{company.name}</Td>
                 <Td>
                   <Stack spacing={3} direction="row" align="center">
-                    <Link to={`/companies/${company.id}`}>
+                    <Link to={`/app/companies/${company.id}`}>
                       <IconButton
                         colorScheme="yellow"
                         aria-label="Edit"

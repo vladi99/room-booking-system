@@ -72,31 +72,35 @@ export function MeetingForm(props) {
           ))}
         </Select>
       </FormControl>
-      <FormControl mb={3} isRequired isInvalid={errors?.name}>
+      <FormControl mb={3} isRequired isInvalid={errors?.start}>
         <FormLabel>Start</FormLabel>
         <Controller
           control={control}
           name="start"
           render={({ field }) => (
             <DatePicker
-              selected={field.value}
+              selected={field.value ? new Date(field.value) : null}
               onChange={field.onChange}
             />
           )}
         />
+        {errors?.start?.type === 'required' && <FormErrorMessage>This field is required</FormErrorMessage>}
+        {errors?.start?.type === 'server' && <FormErrorMessage>{errors?.start?.message}</FormErrorMessage>}
       </FormControl>
-      <FormControl mb={3} isRequired isInvalid={errors?.name}>
+      <FormControl mb={3} isRequired isInvalid={errors?.end}>
         <FormLabel>End</FormLabel>
         <Controller
           control={control}
           name="end"
           render={({ field }) => (
             <DatePicker
-              selected={field.value}
+              selected={field.value ? new Date(field.value) : null}
               onChange={field.onChange}
             />
           )}
         />
+        {errors?.end?.type === 'required' && <FormErrorMessage>This field is required</FormErrorMessage>}
+        {errors?.end?.type === 'server' && <FormErrorMessage>{errors?.end?.message}</FormErrorMessage>}
       </FormControl>
       <Flex>
         <Button

@@ -14,33 +14,38 @@ const initialState = {
   status: IDLE,
 };
 
-export const fetchRoomsAsync = createAsyncThunk('room/fetchRooms', async () => {
-  const res = await fetchRooms();
+export const fetchRoomsAsync = createAsyncThunk('room/fetchRooms', async (_, { getState }) => {
+  const companyId = getState().auth.companyId;
+  const res = await fetchRooms(companyId);
   return res.data;
 });
 
-export const fetchRoomAsync = createAsyncThunk('room/fetchRoom', async (id) => {
-  const res = await fetchRoom(id);
+export const fetchRoomAsync = createAsyncThunk('room/fetchRoom', async (id, { getState }) => {
+  const companyId = getState().auth.companyId;
+  const res = await fetchRoom(companyId, id);
   return res.data;
 });
 
-export const deleteRoomAsync = createAsyncThunk('room/deleteRoom', async (id) => {
-  const res = await deleteRoom(id);
+export const deleteRoomAsync = createAsyncThunk('room/deleteRoom', async (id, { getState }) => {
+  const companyId = getState().auth.companyId;
+  const res = await deleteRoom(companyId, id);
   return res.data;
 });
 
-export const createRoomAsync = createAsyncThunk('room/createRoom', async (room, { rejectWithValue }) => {
+export const createRoomAsync = createAsyncThunk('room/createRoom', async (room, { getState, rejectWithValue }) => {
   try {
-    const res = await createRoom(room);
+    const companyId = getState().auth.companyId;
+    const res = await createRoom(companyId, room);
     return res.data
   } catch (err) {
     return rejectWithValue(err.response.data)
   }
 });
 
-export const updateRoomAsync = createAsyncThunk('room/updateRoom', async (room, { rejectWithValue }) => {
+export const updateRoomAsync = createAsyncThunk('room/updateRoom', async (room, { getState, rejectWithValue }) => {
   try {
-    const res = await updateRoom(room);
+    const companyId = getState().auth.companyId;
+    const res = await updateRoom(companyId, room);
     return res.data
   } catch (err) {
     return rejectWithValue(err.response.data)

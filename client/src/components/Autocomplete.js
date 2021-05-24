@@ -25,6 +25,11 @@ export const Autocomplete = ({
     }
   };
 
+  const onClick = () => {
+    setDisplayOptions(true);
+    setPartialResult(matchSorter(options, '', { keys: [labelKey, valueKey] }));
+  }
+
   const isOptionSelected = (option) => {
     return result.some((selectedOption) => selectedOption[valueKey] === option[valueKey])
   };
@@ -81,6 +86,7 @@ export const Autocomplete = ({
         name={inputName}
         onChange={(e) => filterOptions(e.currentTarget.value)}
         ref={inputRef}
+        onClick={onClick}
         isInvalid={isInvalid}
       />
       {displayOptions && (

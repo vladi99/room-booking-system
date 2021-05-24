@@ -2,6 +2,7 @@ import {
   EditIcon as ChakraEditIcon,
   DeleteIcon as ChakraDeleteIcon,
   AddIcon as ChakraAddIcon,
+  Icon as ChakraIcon,
 } from '@chakra-ui/icons';
 
 export function EditIcon() {
@@ -14,4 +15,8 @@ export function DeleteIcon() {
 
 export function AddIcon() {
   return <ChakraAddIcon />
+}
+
+export function Icon(props) {
+  return <ChakraIcon {...props} />
 }

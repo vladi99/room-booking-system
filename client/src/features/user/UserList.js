@@ -65,7 +65,7 @@ export function UserList() {
   return (
     <>
       <Container maxW="3xl">
-        <TableHeading title="Users" addLink="/users/create"/>
+        <TableHeading title="Users" addLink="/app/users/create"/>
 
         <Table colorScheme="teal" variant="striped">
           <Thead>
@@ -86,7 +86,7 @@ export function UserList() {
                 <Td maxW={200}>{user.lastName}</Td>
                 <Td>
                   <Stack spacing={3} direction="row" align="center">
-                    <Link to={`/users/${user.id}`}>
+                    <Link to={`/app/users/${user.id}`}>
                       <IconButton
                         colorScheme="yellow"
                         aria-label="Edit"

@@ -5,7 +5,7 @@ import {
   useToast,
 } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { createUserAsync } from './userSlice';
+import { createUserAsync, fetchUserRolesAsync, selectRoles, selectRolesStatus } from './userSlice';
 import { fetchCompaniesAsync, selectCompanies, selectCompanyStatus } from '../company/companySlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
@@ -18,13 +18,21 @@ export function CreateUser() {
   const dispatch = useDispatch();
   const companyStatus = useSelector(selectCompanyStatus);
   const companies = useSelector(selectCompanies);
-  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset } = useForm();
+  const rolesStatus = useSelector(selectRolesStatus);
+  const roles = useSelector(selectRoles);
+  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset, control } = useForm();
 
   useEffect(() => {
     if (companyStatus === IDLE) {
       dispatch(fetchCompaniesAsync());
     }
   }, [dispatch, companyStatus]);
+
+  useEffect(() => {
+    if (rolesStatus === IDLE) {
+      dispatch(fetchUserRolesAsync());
+    }
+  }, [dispatch, rolesStatus]);
 
   const onSubmit = async (data) => {
     try {
@@ -54,7 +62,9 @@ export function CreateUser() {
         errors={errors}
         isSubmitting={isSubmitting}
         register={register}
+        control={control}
         companies={companies}
+        roles={roles}
       />
     </Container>
   );

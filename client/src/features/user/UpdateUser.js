@@ -5,7 +5,14 @@ import {
   useToast,
 } from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserAsync, selectSelectedUser, updateUserAsync } from './userSlice';
+import {
+  fetchUserAsync,
+  fetchUserRolesAsync,
+  selectRoles,
+  selectRolesStatus,
+  selectSelectedUser,
+  updateUserAsync
+} from './userSlice';
 import { fetchCompaniesAsync, selectCompanies, selectCompanyStatus } from '../company/companySlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm } from 'react-hook-form';
@@ -20,7 +27,9 @@ export function UpdateUser() {
   const companyStatus = useSelector(selectCompanyStatus);
   const companies = useSelector(selectCompanies);
   const user = useSelector(selectSelectedUser);
-  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset } = useForm();
+  const rolesStatus = useSelector(selectRolesStatus);
+  const roles = useSelector(selectRoles);
+  const { handleSubmit, register, setError, formState: { errors, isSubmitting }, reset, control, setValue } = useForm();
   const { id } = useParams();
 
   useEffect(() => {
@@ -30,8 +39,16 @@ export function UpdateUser() {
   }, [dispatch, companyStatus]);
 
   useEffect(() => {
-    reset(user)
-  }, [user, reset]);
+    if (rolesStatus === IDLE) {
+      dispatch(fetchUserRolesAsync());
+    }
+  }, [dispatch, rolesStatus]);
+
+  useEffect(() => {
+    const { roles, ...usr } = user;
+    reset(usr);
+    setValue('roles', roles)
+  }, [user, reset, setValue]);
 
   useEffect(() => {
     dispatch(fetchUserAsync(id))
@@ -64,8 +81,10 @@ export function UpdateUser() {
         onSubmit={handleSubmit(onSubmit)}
         errors={errors}
         isSubmitting={isSubmitting}
+        control={control}
         register={register}
         companies={companies}
+        roles={roles}
       />
     </Container>
   );

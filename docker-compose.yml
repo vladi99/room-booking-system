@@ -32,6 +32,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_HOST_IP=mysql
+      - BCRYPT_SECRET=${BCRYPT_SECRET}
       - PORT=${API_PORT}
     ports:
       - ${API_PORT}:${API_PORT}

@@ -1,13 +1,13 @@
 import express from 'express';
-import { create, del, findAll, update, findOne } from '../contollers/user';
+import { create, del, findAll, findOne, update } from '../contollers/user';
+import { isCompanyAdminOrAdmin, verifyToken } from '../middlewares/authJwt'
 
-export default function (app) {
-  const router = express.Router();
-  router.get('/', findAll);
-  router.get('/:id', findOne);
-  router.post('/', create);
-  router.put('/:id', update);
-  router.delete('/:id', del);
+const router = express.Router({ mergeParams : true });
 
-  app.use('/api/users', router);
-}
+router.get('/', verifyToken, findAll);
+router.get('/:id', verifyToken, findOne);
+router.post('/', create);
+router.put('/:id', verifyToken, update);
+router.delete('/:id', verifyToken, isCompanyAdminOrAdmin, del);
+
+export default router;

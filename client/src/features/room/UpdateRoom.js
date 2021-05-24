@@ -29,7 +29,7 @@ export function UpdateRoom() {
     const { companies, ...roomValues } = room;
     reset(roomValues);
     setValue('companies', companies)
-  }, [room, reset, dispatch]);
+  }, [room, setValue, reset, dispatch]);
 
   useEffect(() => {
     dispatch(fetchRoomAsync(id))

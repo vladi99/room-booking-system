@@ -5,6 +5,10 @@ export function fetchUsers() {
   return axios.get(`${API_URL}/users`);
 }
 
+export function fetchUserRoles() {
+  return axios.get(`${API_URL}/roles`);
+}
+
 export function fetchUser(id) {
   return axios.get(`${API_URL}/users/${id}`);
 }

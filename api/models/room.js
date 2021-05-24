@@ -3,6 +3,7 @@ import { NAME_MAX_LENGTH, NAME_MIN_LENGTH } from '../utils/constants';
 export default (sequelize, DataTypes, Model) => {
   class Room extends Model {
     static associate(models) {
+      this.hasMany(models.meeting);
       this.belongsToMany(models.company, {
         through: 'companyRooms',
         as: 'companies',
