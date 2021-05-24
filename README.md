@@ -1,5 +1,14 @@
 # Room booking system
 
+## Demo
+
+https://youtu.be/prI6H0keFxw
+
+## Live URLs
+
+* CLIENT - https://book-room-system.herokuapp.com (email: admin@mail.com, pass:12345678)
+* API - https://room-booking-system-api.herokuapp.com
+
 ## Getting Started
 Follow these steps to get the project setup on your machine.
 
@@ -68,10 +77,6 @@ docker run --name=room-booking-system-api --rm --network=room-booking-system -p 
 # Run the client
 docker run --name=room-booking-system-client --rm --network=room-booking-system -p 1337:80 <user>/room-booking-system_client:<version>
 ```
-## Live URLs
-
-* API - https://room-booking-system-api.herokuapp.com
-* CLIENT - https://book-room-system.herokuapp.com
 
 ## Running tests
 
