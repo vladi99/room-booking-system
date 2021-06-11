@@ -26,10 +26,14 @@ export const fetchRoomAsync = createAsyncThunk('room/fetchRoom', async (id, { ge
   return res.data;
 });
 
-export const deleteRoomAsync = createAsyncThunk('room/deleteRoom', async (id, { getState }) => {
-  const companyId = getState().auth.companyId;
-  const res = await deleteRoom(companyId, id);
-  return res.data;
+export const deleteRoomAsync = createAsyncThunk('room/deleteRoom', async (id, { getState, rejectWithValue }) => {
+  try {
+    const companyId = getState().auth.companyId;
+    const res = await deleteRoom(companyId, id);
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
 });
 
 export const createRoomAsync = createAsyncThunk('room/createRoom', async (room, { getState, rejectWithValue }) => {

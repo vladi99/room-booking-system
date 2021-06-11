@@ -47,6 +47,7 @@ export function UpdateRoom() {
       setServerErrors(e, setError);
       toast({
         title: 'Failed to update room.',
+        description: e.message,
         status: 'error',
       })
     }

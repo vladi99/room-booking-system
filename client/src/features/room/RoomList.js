@@ -55,6 +55,7 @@ export function RoomList() {
     } catch (e) {
       toast({
         title: 'Failed to delete room.',
+        description: e.message,
         status: 'error',
       })
     } finally {

@@ -81,9 +81,9 @@ export async function update(req, res) {
   try {
     const dbRooms = await dbCompany.getRooms({ where: { id }, through: { where: { owner: true } } });
     if (!dbRooms?.length) {
-      return res.status(404).send({ message: 'Room not found.'});
+      return res.status(404).send({ message: 'You are not an owner of the room.'});
     }
-    const dbRoom = dbRooms[0];
+    const [dbRoom] = dbRooms;
     const companiesByRoomWithoutOwner = await dbRoom.getCompanies({
       where: { id: { [Sequelize.Op.not]: dbCompany.id} }
     });
@@ -107,10 +107,12 @@ export async function del(req, res) {
   const transaction = await sequelize.transaction();
 
   try {
-    const dbRoom = await req.company.getRooms({ where: { id }, through: { where: { owner: true } } });
-    if (!dbRoom) {
-      return res.status(404).send({ message: 'Room not found.'});
+    const dbRooms = await req.company.getRooms({ where: { id }, through: { where: { owner: true } } });
+    if (!dbRooms?.length) {
+      return res.status(404).send({ message: 'You are not an owner of the room.'});
     }
+
+    const [dbRoom] = dbRooms;
 
     const companies = await dbRoom.getCompanies();
     await dbRoom.removeCompanies(companies, { transaction });
@@ -118,6 +120,7 @@ export async function del(req, res) {
     await transaction.commit();
     return res.sendStatus(200);
   } catch (e) {
+    console.log(e)
     await transaction.rollback();
     res.status(400).send(e);
   }
