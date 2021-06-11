@@ -2,7 +2,17 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useDisclosure } from './ConfirmationModal';
 import { Box, Flex, HStack, Stack } from './Layout';
 import { Button, IconButton } from './Button';
-import { Avatar, Image, Link, Menu, MenuButton, MenuItem, MenuList, useColorModeValue } from '@chakra-ui/react';
+import {
+  Avatar,
+  Image,
+  Link,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+  useColorModeValue
+} from '@chakra-ui/react';
 import { Link as ReactRouterLink } from 'react-router-dom';
 
 const NavLink = ({ children, url }) => (
@@ -20,7 +30,7 @@ const NavLink = ({ children, url }) => (
   </Link>
 );
 
-export function Navbar({ links, logOut, prefix }) {
+export function Navbar({ links, logOut, prefix, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -59,6 +69,8 @@ export function Navbar({ links, logOut, prefix }) {
                 />
               </MenuButton>
               <MenuList>
+                <MenuItem>{user.email}</MenuItem>
+                <MenuDivider />
                 <MenuItem onClick={logOut}>Logout</MenuItem>
               </MenuList>
             </Menu>
