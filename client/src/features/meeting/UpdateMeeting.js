@@ -56,6 +56,7 @@ export function UpdateMeeting() {
       setServerErrors(e, setError);
       toast({
         title: 'Failed to update meeting.',
+        description: e.message,
         status: 'error',
       })
     }

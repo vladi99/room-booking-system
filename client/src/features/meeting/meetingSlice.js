@@ -26,10 +26,14 @@ export const fetchMeetingAsync = createAsyncThunk('meeting/fetchMeeting', async 
   return res.data;
 });
 
-export const deleteMeetingAsync = createAsyncThunk('meeting/deleteMeeting', async (id, { getState }) => {
-  const userId = getState().auth.currentId;
-  const res = await deleteMeeting(userId, id);
-  return res.data;
+export const deleteMeetingAsync = createAsyncThunk('meeting/deleteMeeting', async (id, { getState, rejectWithValue }) => {
+  try {
+    const userId = getState().auth.currentId;
+    const res = await deleteMeeting(userId, id);
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
 });
 
 export const createMeetingAsync = createAsyncThunk('meeting/createMeeting', async (meeting, { getState, rejectWithValue }) => {

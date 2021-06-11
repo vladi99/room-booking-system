@@ -55,6 +55,7 @@ export function MeetingList() {
     } catch (e) {
       toast({
         title: 'Failed to cancel a meeting.',
+        description: e.message,
         status: 'error',
       })
     } finally {

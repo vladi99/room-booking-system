@@ -44,6 +44,7 @@ export function CreateMeeting() {
       setServerErrors(e, setError);
       toast({
         title: 'Failed to create meeting.',
+        description: e.message,
         status: 'error',
       })
     }
