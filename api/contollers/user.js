@@ -2,7 +2,7 @@ import models from '../models'
 import { ROLES } from '../models/role';
 import Sequelize from 'sequelize';
 
-const { user, role, sequelize } = models;
+const { user, role, sequelize, company, room } = models;
 const attributes = { exclude: ['password'] };
 
 const include = {
@@ -14,8 +14,46 @@ const include = {
 };
 
 export async function findAll(req, res) {
+  const companyId = await req.current.companyId;
+
   try {
+    if (companyId) {
+      const dbCompany = await company.findByPk(companyId, {
+        include: {
+          model: room,
+          as: 'rooms',
+          through: {
+            attributes: []
+          },
+          include: {
+            model: company,
+            as: 'companies',
+            through: {
+              attributes: []
+            },
+          }
+        }
+      })
+
+      const companies = dbCompany.rooms.flatMap(r => r.companies)
+      const companyIds = companies.map(({id}) => id);
+
+      const uniqueCompanyIds = new Set([...companyIds, companyId]);
+      const users = await user.findAll({
+        where: {
+          companyId: {
+            [Sequelize.Op.in]: [...uniqueCompanyIds]
+          }
+        },
+        attributes,
+        include
+      });
+
+      return res.send(users)
+    }
+
     const dbUsers = await user.findAll({ attributes, include });
+
     res.send(dbUsers);
   } catch (e) {
     res.status(400).send(e)
@@ -89,8 +127,20 @@ export async function update(req, res) {
   }
 }
 
-export function del(req, res) {
+export async function del(req, res) {
   const { id } = req.params;
+  const userToDelete = await user.findByPk(id);
+
+  const isAdmin = await req.current.isAdmin();
+  const isCompanyAdmin = await req.current.isCompanyAdmin();
+
+  if(!isAdmin && !isCompanyAdmin) {
+    return res.sendStatus(403);
+  }
+
+  if (!isAdmin && req.current.companyId !== userToDelete.companyId) {
+    return res.status(403).send({message: 'You are not managing this user.'});
+  }
 
   return user.destroy({
     where: { id }

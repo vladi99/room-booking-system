@@ -55,6 +55,7 @@ export function UserList() {
     } catch (e) {
       toast({
         title: 'Failed to delete user.',
+        description: e.message,
         status: 'error',
       })
     } finally {

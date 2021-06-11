@@ -71,7 +71,7 @@ export const meetingSlice = createSlice({
       })
       .addCase(fetchMeetingsAsync.fulfilled, (state, action) => {
         state.status = SUCCESS
-        state.items.push(...action.payload);
+        state.items = action.payload;
       })
       .addCase(fetchMeetingsAsync.rejected, (state, action) => {
         state.status = FAIL;

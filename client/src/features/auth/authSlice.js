@@ -38,10 +38,7 @@ export const authSlice = createSlice({
   reducers: {
     logout(state) {
       localStorage.removeItem(key);
-      state.isLoggedIn = false;
-      state.current = null;
-      state.currentId = null;
-      state.companyId = null;
+      window.location.reload();
     },
   },
   extraReducers: (builder) => {

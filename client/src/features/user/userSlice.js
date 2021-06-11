@@ -20,9 +20,13 @@ export const fetchUserAsync = createAsyncThunk('user/fetchUser', async (id) => {
   return res.data;
 });
 
-export const deleteUserAsync = createAsyncThunk('user/deleteUser', async (id) => {
-  const res = await deleteUser(id);
-  return res.data;
+export const deleteUserAsync = createAsyncThunk('user/deleteUser', async (id, { rejectWithValue }) => {
+  try {
+    const res = await deleteUser(id);
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response.data)
+  }
 });
 
 export const createUserAsync = createAsyncThunk('user/createUser', async (user, { rejectWithValue }) => {
@@ -96,7 +100,9 @@ export const userSlice = createSlice({
   },
 });
 
-export const selectUsers = (state) => state.user.items;
+export const selectUsers = (state) => {
+  return state.user.items.filter(({ id }) => id !== state.auth.currentId);
+}
 export const selectUserStatus = (state) => state.user.status;
 export const selectSelectedUser = (state) => state.user.selected;
 export const selectRoles = (state) => state.user.roles;
